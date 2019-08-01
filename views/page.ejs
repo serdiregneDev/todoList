@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Document</title>
+    <style>
+        .badge:hover {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5 mb-3">My todoList</h1>        
+        <ul class="list-group mb-3"></ul>
+        <form class="form-inline" action="" id="form">
+            <label class="sr-only" for="element">Name</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="element" placeholder="what should I do" name="todo">
+            <button type="submit" class="btn btn-primary mb-2">Validate</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+        let socket = io.connect('http://localhost:3000');
+
+        const form = document.getElementById('form');
+        const ul = document.querySelector('.list-group');
+        let element = document.getElementById('element');                       
+
+        // Get Elements
+        socket.on('getTodoList', (todoList) => {
+            displayList(todoList);         
+        });
+
+        // Add element 
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            element.value.trim();
+            if(element.value != '' ){
+                socket.emit('addElement', element.value);
+            }
+            element.value = "";
+        })        
+
+        function deleteElement(id) {
+            if(typeof(id) == 'number') {
+                socket.emit('deleteElement', id)
+            };            
+        }
+        
+        function displayList(todoList){            
+            refreshList();
+            if(todoList.length > 0){                
+                todoList.forEach((element, index) => {
+                    let node = document.createElement('li');
+                    node.className = "list-group-item d-flex justify-content-between align-items-center";
+                    node.innerHTML = `${element} 
+                        <span class="badge badge-light badge-pill" onclick="deleteElement(${index})">X</span>
+                    `;
+                    ul.appendChild(node);
+                });
+            }
+        }
+        
+        function refreshList (){
+            let items = document.querySelectorAll('.list-group-item');
+            items.forEach(item => ul.removeChild(item));
+        }
+        
+        
+    </script>
+</body>
+</html>
