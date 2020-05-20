@@ -1,3 +1,4 @@
+[![Runme](https://runme.io/static/button.svg)](https://runme.io/run?app_id=fd75ac44-1bda-4781-b655-df337057718f)
 # todoList
 A real time todolist manager 
 
@@ -23,5 +24,3 @@ A real time todolist manager
 <p><code> $ npm install </code></p>
 <p>Run app</p>
 <p><code> $ node app.js </code></p>
-
-[![Runme](https://runme.io/static/button.svg)](https://runme.io/run?app_id=fd75ac44-1bda-4781-b655-df337057718f)
